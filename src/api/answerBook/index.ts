@@ -6,14 +6,14 @@
 /*   By: break <jixueqing@flipboard.cn>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/20 10:24:38 by break             #+#    #+#             */
-/*   Updated: 2020/07/20 17:33:59 by break            ###   ########.fr       */
+/*   Updated: 2020/07/20 18:29:16 by break            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import { Router, Request, Response } from '../../denotrain/index.ts';
 import Schema, { string } from 'https://denoporter.sirjosh.workers.dev/v1/deno.land/x/computed_types/src/index.ts';
 import { validateRequest } from '../../utils/validateRequest.ts';
-import { successResponse, errorResponse } from '../../utils/utils.ts';
+import { successResponse, errorResponse } from '../../utils/response.ts';
 import { answer_book_users, AnswerBookUsers } from '../../mongo-service/models/AnswerBookUsers.ts';
 import { MongoServerError } from '../../utils/errors.ts';
 
@@ -26,7 +26,7 @@ export const api = new Router();
 //
 
 //
-// ─── schema ───────────────────────────────────────────────────────────
+// ─── SCHEMA ───────────────────────────────────────────────────────────
 //
 const questionSchema = Schema({
   nickname: string.trim().normalize().between(1, 20),
@@ -75,25 +75,17 @@ api.post('/actions/add-new-question', ({ req, res }) => Promise.resolve()
     );
 
     // check if user already exit
-    const user = await AnswerBookUsers.findOne(userType === 'wechat' ? {
-      openid,
-    } : {
-      flipid,
-    });
-
+    const user = await AnswerBookUsers.findOne(userType === 'wechat' ? { openid } : { flipid });
     if (user) {
       return questionResponse(req, res, user, question, answer);
     }
 
     // user not existed
-    const newUser = new answer_book_users(
-      nickname, openid, flipid, userType,
-    );
+    const newUser = new answer_book_users(nickname, openid, flipid, userType);
 
-    questionResponse(req, res, newUser, question, answer);
+    return questionResponse(req, res, newUser, question, answer);
   })
   .catch(errorResponse(req, res)));
-
 
 //
 // ────────────────────────────────────────────────────────────────────────────  ──────────
@@ -134,9 +126,9 @@ api.get('/actions/get-user-questions', ({ req, res }) => Promise.resolve()
     if (!user) {
       return errorResponse(req, res)(new MongoServerError);
     }
+
     successResponse(res, {
       data: {
-
         ...user,
       }
     });

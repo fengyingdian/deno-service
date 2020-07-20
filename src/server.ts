@@ -1,8 +1,10 @@
 import { Application } from './denotrain/index.ts';
-
+import { serviceName, servicePort } from './constants/index.ts';
 import { api } from './api/index.ts';
 
-const app = new Application({ port: 80 });
+const app = new Application({
+  port: servicePort,
+});
 
 // Middleware
 // app.use((ctx) => {
@@ -21,6 +23,6 @@ app.get('/', () => { hello: 'world' });
 
 app.use('/api', api);
 
-await app.run();
+app.run();
 
-console.log('service running at 80');
+console.log(`${serviceName} running at ${servicePort}`);

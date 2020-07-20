@@ -6,7 +6,7 @@
 import Schema from 'https://denoporter.sirjosh.workers.dev/v1/deno.land/x/computed_types/src/index.ts';
 
 import { RequestValidationError } from './errors.ts';
-import { errorTrigger } from './utils.ts';
+import { errorTrigger } from './response.ts';
 
 /**
  * * Validate request input parameters

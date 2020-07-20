@@ -6,13 +6,21 @@
 /*   By: break <jixueqing@flipboard.cn>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/17 16:31:41 by break             #+#    #+#             */
-/*   Updated: 2020/07/17 18:12:25 by break            ###   ########.fr       */
+/*   Updated: 2020/07/20 18:09:08 by break            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import "https://deno.land/x/dotenv/load.ts";
 
 const { get = () => {} } = Deno.env;
+
+//
+// ─── SERVICE ────────────────────────────────────────────────────────────────────
+//
+
+export const serviceName = get('SERVER_NAME') || 'deno-service';
+
+export const servicePort = parseInt(get('SERVER_POST') || '80', 10);
 
 //
 // ─── SERVICE MONGO ──────────────────────────────────────────────────────────────

@@ -4,7 +4,7 @@
  * Author: ChegCheng Wan <chengcheng.st@gmail.com>
  */
 import { ServerError, ServerErrorConstructor } from './errors.ts';
-import { Response } from 'https://deno.land/x/denotrain@v0.5.0/mod.ts';
+import { Request, Response } from '../denotrain/index.ts';
 
 export const successResponse = (res: Response, payload: any) => {
   res.setBody({
@@ -13,11 +13,7 @@ export const successResponse = (res: Response, payload: any) => {
   });
 };
 
-export const errorTrigger = (constructor: ServerErrorConstructor, message?: string, details?: any) => {
-  throw new constructor(message, details);
-};
-
-export const errorResponse = (req: any, res: any) => (error: ServerError) => {
+export const errorResponse = (req: Request, res: Response) => (error: ServerError) => {
   const { path } = req;
   const { message } = error;
   console.error(`Error requesting ${path}, ${message}`);
@@ -26,4 +22,8 @@ export const errorResponse = (req: any, res: any) => (error: ServerError) => {
     message: error.message,
     details: error.details,
   });
+};
+
+export const errorTrigger = (constructor: ServerErrorConstructor, message?: string, details?: any) => {
+  throw new constructor(message, details);
 };
